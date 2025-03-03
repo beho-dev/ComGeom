@@ -1,2 +1,2 @@
-﻿using var game = new comgeom.Game1();
+﻿using var game = new comgeom.TriangulationGame();
 game.Run();

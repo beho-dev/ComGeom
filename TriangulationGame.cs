@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -47,8 +48,46 @@ public class TriangulationGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+
+        Texture2D lineTexture = new Texture2D(GraphicsDevice, 1, 1);
+        lineTexture.SetData(new[] { Color.White });
+
+        var triangle = Shapes.EquilateralTriangle(ViewportCenter(), 100f);
+        DrawVertexStructure(triangle, lineTexture);
+
+        _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    private Vector2 ViewportCenter()
+    {
+        return new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+    }
+
+    private void DrawVertexStructure(VertexStructure head, Texture2D lineTexture)
+    {
+        VertexStructure current = head;
+
+        do
+        {
+            Vector2 edge = current.Next.Position - current.Position;
+            float length = edge.Length();
+            float angle = MathF.Atan2(edge.Y, edge.X);
+
+            _spriteBatch.Draw(
+                lineTexture,
+                current.Position,
+                null,
+                Color.White,
+                angle,
+                Vector2.Zero,
+                new Vector2(length, 1),
+                SpriteEffects.None,
+                0
+            );
+            current = current.Next;
+        } while (current != head);
     }
 }
