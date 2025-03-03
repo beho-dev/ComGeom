@@ -115,8 +115,11 @@ public class Shapes
 
     public static bool InAngle(Vector2 a, Vector2 b, Vector2 c, Vector2 x)
     {
-        var inside = Shapes.IsLeft(a, b, x) && Shapes.IsLeft(b, c, x);
-        return AngleIsConvex(a, b, c) ? inside : !inside;
+        if (AngleIsConvex(a, b, c)) {
+            return Shapes.IsLeft(b, x, a) && Shapes.IsLeft(x, b, c);
+        }
+
+        return !(Shapes.IsLeftOrOn(b, x, c) && Shapes.IsLeftOrOn(x, b, a));
     }
 
     public static bool AngleIsConvex(Vector2 a, Vector2 b, Vector2 c)

@@ -28,8 +28,8 @@ public class ShapesTests
             // Assert
             Assert.Equal(3, vertices.Count);
             Assert.Equal(new Vector2(0, -expectedHeight * 2 / 3f), vertices[0]);
-            Assert.Equal(new Vector2(sideLength / 2f, expectedHeight / 3f), vertices[1]);
-            Assert.Equal(new Vector2(-sideLength / 2f, expectedHeight / 3f), vertices[2]);
+            Assert.Equal(new Vector2(-sideLength / 2f, expectedHeight / 3f), vertices[1]);
+            Assert.Equal(new Vector2(sideLength / 2f, expectedHeight / 3f), vertices[2]);
         }
 
         [Fact]

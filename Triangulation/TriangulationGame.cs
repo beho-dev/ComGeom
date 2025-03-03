@@ -62,30 +62,23 @@ public class TriangulationGame : Game
                 center + new Vector2(100, -100),
                 center + new Vector2(150, 0),
                 center + new Vector2(100, 100),
-                center + new Vector2(0, 0),
+                center + new Vector2(20, -20),
                 center + new Vector2(-150, 0),
             ]
         );
         DrawVertexStructure(triangle, lineTexture);
 
-        // VertexStructure current = triangle;
-        // do
-        // {
-        //     VertexStructure other = current.Next;
-        //     while (other != current)
-        //     {
-        //         Vector2 edge = other.Position - current.Position;
-        //         float length = edge.Length();
-        //         float angle = MathF.Atan2(edge.Y, edge.X);
-        //         Color color = VertexStructure.Diagonal(current, other) ? Color.Green : Color.Red;
-        //         DrawLine(lineTexture, current, length, angle, color);
-
-        //         other = other.Next;
-        //     }
-        //     current = current.Next;
-        // } while (current != triangle);
-
-        DrawDiagonal(lineTexture, triangle, triangle.Next.Next);
+        VertexStructure current = triangle;
+        do
+        {
+            VertexStructure other = current.Next.Next;
+            while (other != current.Previous)
+            {
+                DrawDiagonal(lineTexture, current, other);
+                other = other.Next;
+            }
+            current = current.Next;
+        } while (current != triangle);
 
         _spriteBatch.End();
 

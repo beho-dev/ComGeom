@@ -25,12 +25,12 @@ public class VertexStructure
         var newVertex = new VertexStructure
         {
             Position = position,
-            Next = head.Next,
-            Previous = head,
+            Next = head,
+            Previous = head.Previous,
         };
 
-        head.Next.Previous = newVertex;
-        head.Next = newVertex;
+        head.Previous = newVertex;
+        newVertex.Previous.Next = newVertex;
 
         return newVertex;
     }
@@ -122,10 +122,6 @@ public class VertexStructure
     /// <returns>true if the edge between a and b is a diagonal of the polygon, false otherwise</returns>
     public static bool Diagonal(VertexStructure a, VertexStructure b)
     {
-        Console.WriteLine($"Checking if {a.Position} -> {b.Position} is a diagonal");
-        Console.WriteLine($"In cone: {InCone(a, b)}");
-        Console.WriteLine($"In cone: {InCone(b, a)}");
-        Console.WriteLine($"Diagonal does not cross any edge: {DiagonalDoesNotCrossAnyEdge(a, b)}");
         return InCone(a, b) && InCone(b, a) && DiagonalDoesNotCrossAnyEdge(a, b);
     }
 }
