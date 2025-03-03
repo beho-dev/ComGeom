@@ -68,12 +68,7 @@ public class DiagonalTests
     {
         // Arrange
         var polygon = Polygon.FromList(
-            [
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(1, 1),
-                new Vector2(0, 1),
-            ]
+            [new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1)]
         );
 
         // Act
@@ -82,6 +77,4 @@ public class DiagonalTests
         // Assert
         Assert.False(diagonal);
     }
-
-    
 }
