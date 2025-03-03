@@ -56,7 +56,7 @@ public class TriangulationGame : Game
 
         var center = ViewportCenter();
 
-        var triangle = VertexStructure.FromList(
+        var polygon = Polygon.FromList(
             [
                 center + new Vector2(-100, -100),
                 center + new Vector2(100, -100),
@@ -66,49 +66,45 @@ public class TriangulationGame : Game
                 center + new Vector2(-150, 0),
             ]
         );
-        DrawVertexStructure(triangle, lineTexture);
 
-        VertexStructure current = triangle;
-        do
-        {
-            VertexStructure other = current.Next.Next;
-            while (other != current.Previous)
+        // draw the outline of the polygon in white
+        polygon.EachVertex(
+            (vertex) =>
             {
-                DrawDiagonal(lineTexture, current, other);
-                other = other.Next;
+                DrawEdge(lineTexture, vertex.Position, vertex.Next.Position, Color.White);
             }
-            current = current.Next;
-        } while (current != triangle);
+        );
+
+        // draw the diagonals of the polygon in green, if they are valid
+        // otherwise, draw them in red
+        polygon.EachVertex(
+            (a) =>
+            {
+                polygon.EachVertex(
+                    (b) =>
+                    {
+                        if (a == b || a.Next == b || a.Previous == b)
+                        {
+                            // a and b are on the same edge
+                            // so it is not a valid diagonal
+                            return;
+                        }
+
+                        Color color = Diagonal.IsDiagonal(a, b) ? Color.Green : Color.Red;
+                        DrawEdge(lineTexture, a.Position, b.Position, color);
+                    }
+                );
+            }
+        );
 
         _spriteBatch.End();
 
         base.Draw(gameTime);
     }
 
-    private void DrawDiagonal(Texture2D lineTexture, VertexStructure a, VertexStructure b)
-    {
-        DrawEdge(
-            lineTexture,
-            a.Position,
-            b.Position,
-            VertexStructure.Diagonal(a, b) ? Color.Green : Color.Red
-        );
-    }
-
     private Vector2 ViewportCenter()
     {
         return new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-    }
-
-    private void DrawVertexStructure(VertexStructure head, Texture2D lineTexture)
-    {
-        VertexStructure current = head;
-
-        do
-        {
-            DrawEdge(lineTexture, current.Position, current.Next.Position, Color.White);
-            current = current.Next;
-        } while (current != head);
     }
 
     private void DrawEdge(Texture2D lineTexture, Vector2 a, Vector2 b, Color color)
@@ -117,20 +113,9 @@ public class TriangulationGame : Game
         float length = edge.Length();
         float angle = MathF.Atan2(edge.Y, edge.X);
 
-        DrawLine(lineTexture, a, length, angle, color);
-    }
-
-    private void DrawLine(
-        Texture2D lineTexture,
-        Vector2 start,
-        float length,
-        float angle,
-        Color color
-    )
-    {
         _spriteBatch.Draw(
             lineTexture,
-            start,
+            a,
             null,
             color,
             angle,

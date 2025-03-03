@@ -5,21 +5,23 @@ namespace Triangulation;
 
 public class Shapes
 {
-    public static VertexStructure EquilateralTriangle(Vector2 center, float sideLength)
+    /// <summary>
+    /// Calculates twice the area of a triangle.
+    ///
+    /// This is done to avoid floating point precision issues.
+    ///
+    /// N.B. this is more a principal of the textbook I am
+    /// following, the monogame framework works in floating point,
+    /// precision, we may want to limit our game logic to integer
+    /// coordinates for fun later.
+    /// </summary>
+    /// <param name="a">the first vertex of the triangle</param>
+    /// <param name="b">the second vertex of the triangle</param>
+    /// <param name="c">the third vertex of the triangle</param>
+    /// <returns>twice the area of the triangle</returns>
+    public static float TriangleArea2(Vector2 a, Vector2 b, Vector2 c)
     {
-        float height = sideLength * MathF.Sqrt(3) / 2f;
-        return VertexStructure.FromList(
-            [
-                center + new Vector2(0, -height * 2 / 3f),
-                center + new Vector2(-sideLength / 2f, height / 3f),
-                center + new Vector2(sideLength / 2f, height / 3f),
-            ]
-        );
-    }
-
-    public static float TriangleArea(Vector2 a, Vector2 b, Vector2 c)
-    {
-        return (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
+        return ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X));
     }
 
     /// <summary>
@@ -31,7 +33,7 @@ public class Shapes
     /// <returns>true if c is on the left side of the line segment, false otherwise</returns>
     public static bool IsLeft(Vector2 a, Vector2 b, Vector2 c)
     {
-        return TriangleArea(a, b, c) > 0;
+        return TriangleArea2(a, b, c) > 0;
     }
 
     /// <summary>
@@ -43,12 +45,12 @@ public class Shapes
     /// <returns>true if c is on the left side of the line segment, false otherwise</returns>
     public static bool IsLeftOrOn(Vector2 a, Vector2 b, Vector2 c)
     {
-        return TriangleArea(a, b, c) >= 0;
+        return TriangleArea2(a, b, c) >= 0;
     }
 
     public static bool Collinear(Vector2 a, Vector2 b, Vector2 c)
     {
-        return TriangleArea(a, b, c) == 0;
+        return TriangleArea2(a, b, c) == 0;
     }
 
     /// <summary>
@@ -65,14 +67,14 @@ public class Shapes
             return false;
         }
 
+        // if a and b are not vertical compare the
         if (a.X != b.X)
         {
             return a.X <= c.X && c.X <= b.X || a.X >= c.X && c.X >= b.X;
         }
-        else
-        {
-            return a.Y <= c.Y && c.Y <= b.Y || a.Y >= c.Y && c.Y >= b.Y;
-        }
+
+        // a and b are vertical so check if c is between a and b
+        return a.Y <= c.Y && c.Y <= b.Y || a.Y >= c.Y && c.Y >= b.Y;
     }
 
     /// <summary>
@@ -115,7 +117,8 @@ public class Shapes
 
     public static bool InAngle(Vector2 a, Vector2 b, Vector2 c, Vector2 x)
     {
-        if (AngleIsConvex(a, b, c)) {
+        if (AngleIsConvex(a, b, c))
+        {
             return Shapes.IsLeft(b, x, a) && Shapes.IsLeft(x, b, c);
         }
 
