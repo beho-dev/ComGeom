@@ -10,6 +10,8 @@ public class TriangulationGame : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Camera _camera;
+    private MouseManager _mouseManager;
 
     public TriangulationGame()
     {
@@ -20,16 +22,17 @@ public class TriangulationGame : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-
         base.Initialize();
+
+        _camera = new Camera();
+
+        _mouseManager = new MouseManager();
+        _mouseManager.OnScroll += (delta) => _camera.Zoom += delta * 0.001f;
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        // TODO: use this.Content to load your game content here
     }
 
     protected override void Update(GameTime gameTime)
@@ -40,7 +43,7 @@ public class TriangulationGame : Game
         )
             Exit();
 
-        // TODO: Add your update logic here
+        _mouseManager.Update();
 
         base.Update(gameTime);
     }
@@ -137,14 +140,25 @@ public class TriangulationGame : Game
         // Create or reuse the basic effect
         BasicEffect effect = new(GraphicsDevice);
         effect.VertexColorEnabled = true;
-        effect.Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-            GraphicsDevice.Viewport.Width,
-            GraphicsDevice.Viewport.Height,
-            0,
-            0,
-            1
-        );
+
+        // Apply zoom to the projection matrix
+        Vector2 center = ViewportCenter();
+        Matrix zoom = Matrix.CreateScale(_camera.Zoom);
+        Matrix translation =
+            Matrix.CreateTranslation(new Vector3(-center, 0))
+            * zoom
+            * Matrix.CreateTranslation(new Vector3(center, 0));
+
+        effect.Projection =
+            translation
+            * Matrix.CreateOrthographicOffCenter(
+                0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                0,
+                0,
+                1
+            );
 
         // Draw the triangle
         foreach (EffectPass pass in effect.CurrentTechnique.Passes)
@@ -165,9 +179,15 @@ public class TriangulationGame : Game
         float length = edge.Length();
         float angle = MathF.Atan2(edge.Y, edge.X);
 
+        Vector2 center = ViewportCenter();
+        Vector2 zoomedA = center + (a - center) * _camera.Zoom;
+        Vector2 zoomedB = center + (b - center) * _camera.Zoom;
+        edge = zoomedB - zoomedA;
+        length = edge.Length();
+
         _spriteBatch.Draw(
             lineTexture,
-            a,
+            zoomedA,
             null,
             color,
             angle,
