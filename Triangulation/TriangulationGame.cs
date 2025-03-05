@@ -12,6 +12,8 @@ public class TriangulationGame : Game
     private SpriteBatch _spriteBatch;
     private Camera _camera;
     private MouseManager _mouseManager;
+    private KeyboardManager _keyboardManager;
+    private bool _showDiagonals = false;
 
     public TriangulationGame()
     {
@@ -28,6 +30,10 @@ public class TriangulationGame : Game
 
         _mouseManager = new MouseManager();
         _mouseManager.OnScroll += (delta) => _camera.Zoom += delta * 0.001f;
+
+        _keyboardManager = new KeyboardManager();
+        _keyboardManager.On(Keys.Escape, () => Exit());
+        _keyboardManager.On(Keys.Space, () => _showDiagonals = !_showDiagonals);
     }
 
     protected override void LoadContent()
@@ -37,14 +43,8 @@ public class TriangulationGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (
-            GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
-            || Keyboard.GetState().IsKeyDown(Keys.Escape)
-        )
-            Exit();
-
         _mouseManager.Update();
-
+        _keyboardManager.Update();
         base.Update(gameTime);
     }
 
@@ -81,28 +81,22 @@ public class TriangulationGame : Game
             }
         );
 
-        // // draw the diagonals of the polygon in green, if they are valid
-        // // otherwise, draw them in red
-        // polygon.EachVertex(
-        //     (a) =>
-        //     {
-        //         polygon.EachVertex(
-        //             (b) =>
-        //             {
-        //                 if (a == b || a.Next == b || a.Previous == b)
-        //                 {
-        //                     // a and b are on the same edge
-        //                     // so it is not a valid diagonal
-        //                     return;
-        //                 }
+        if (_showDiagonals)
+        {
+            RenderPolygonDiagonals(lineTexture, polygon);
+        }
+        else
+        {
+            RenderTriangulation(polygon);
+        }
 
-        //                 Color color = Diagonal.IsDiagonal(a, b) ? Color.Green : Color.Red;
-        //                 DrawEdge(lineTexture, a.Position, b.Position, color);
-        //             }
-        //         );
-        //     }
-        // );
+        _spriteBatch.End();
 
+        base.Draw(gameTime);
+    }
+
+    private void RenderTriangulation(Polygon polygon)
+    {
         var triangles = EarTipRemoval.Triangulate(polygon);
         for (int i = 0; i < triangles.Count; i++)
         {
@@ -110,10 +104,31 @@ public class TriangulationGame : Game
             Color color = InterpolateColors(i, triangles.Count);
             FillTriangle(triangle.Item1, triangle.Item2, triangle.Item3, color);
         }
+    }
 
-        _spriteBatch.End();
+    private void RenderPolygonDiagonals(Texture2D lineTexture, Polygon polygon)
+    {
+        // draw the diagonals of the polygon in green, if they are valid
+        // otherwise, draw them in red
+        polygon.EachVertex(
+            (a) =>
+            {
+                polygon.EachVertex(
+                    (b) =>
+                    {
+                        if (a == b || a.Next == b || a.Previous == b)
+                        {
+                            // a and b are on the same edge
+                            // so it is not a valid diagonal
+                            return;
+                        }
 
-        base.Draw(gameTime);
+                        Color color = Diagonal.IsDiagonal(a, b) ? Color.Green : Color.Red;
+                        DrawEdge(lineTexture, a.Position, b.Position, color);
+                    }
+                );
+            }
+        );
     }
 
     private static Color InterpolateColors(int index, int total)
