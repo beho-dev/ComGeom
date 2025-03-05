@@ -1,10 +1,22 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Triangulation;
 
 public class Shapes
 {
+    public static List<Vector2> EquilateralTriangle(Vector2 center, float sideLength)
+    {
+        float height = sideLength * System.MathF.Sqrt(3) / 2f;
+        return
+        [
+            center + new Vector2(0, -height * 2 / 3f),
+            center + new Vector2(sideLength / 2f, height / 3f),
+            center + new Vector2(-sideLength / 2f, height / 3f),
+        ];
+    }
+
     /// <summary>
     /// Calculates twice the area of a triangle.
     ///

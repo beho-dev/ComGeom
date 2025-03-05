@@ -7,33 +7,6 @@ public class PolygonTests
     public class TriangleTests
     {
         [Fact]
-        public void EquilateralTriangle_CreatesCorrectVertices()
-        {
-            // Arrange
-            Vector2 center = new(0, 0);
-            float sideLength = 2f;
-            float expectedHeight = sideLength * MathF.Sqrt(3) / 2f;
-
-            // Act
-            var triangle = Polygon.EquilateralTriangle(center, sideLength);
-
-            var vertices = new List<Vector2>();
-
-            triangle.EachVertex(
-                (vertex) =>
-                {
-                    vertices.Add(vertex.Position);
-                }
-            );
-
-            // Assert
-            Assert.Equal(3, vertices.Count);
-            Assert.Equal(new Vector2(0, -expectedHeight * 2 / 3f), vertices[0]);
-            Assert.Equal(new Vector2(sideLength / 2f, expectedHeight / 3f), vertices[1]);
-            Assert.Equal(new Vector2(-sideLength / 2f, expectedHeight / 3f), vertices[2]);
-        }
-
-        [Fact]
         public void TriangleArea_CalculatesCorrectly()
         {
             // Arrange

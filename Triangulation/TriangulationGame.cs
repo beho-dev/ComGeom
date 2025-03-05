@@ -1,10 +1,23 @@
 ﻿using System;
 using System.Transactions;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Triangulation;
+
+internal class Highlight
+{
+    public bool IsActive = false;
+    public Vector2 Position = Vector2.Zero;
+    public double Rotation = 0;
+
+    public void Update(GameTime gameTime)
+    {
+        Rotation = gameTime.TotalGameTime.TotalSeconds * 2;
+    }
+}
 
 public class TriangulationGame : Game
 {
@@ -14,6 +27,7 @@ public class TriangulationGame : Game
     private MouseManager _mouseManager;
     private KeyboardManager _keyboardManager;
     private bool _showDiagonals = false;
+    private readonly Highlight _highlight = new() { IsActive = true };
 
     public TriangulationGame()
     {
@@ -45,6 +59,7 @@ public class TriangulationGame : Game
     {
         _mouseManager.Update();
         _keyboardManager.Update();
+        _highlight.Update(gameTime);
         base.Update(gameTime);
     }
 
@@ -88,6 +103,23 @@ public class TriangulationGame : Game
         else
         {
             RenderTriangulation(polygon);
+        }
+
+        if (_highlight.IsActive)
+        {
+            // Draw a semi-transparent green equilateral triangle
+            var vertices = Shapes.EquilateralTriangle(Vector2.Zero, 20);
+
+            var cycle = (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10);
+            var opacity = cycle * 0.5f + 0.5f;
+            var rotation = Matrix.CreateRotationZ((float)_highlight.Rotation);
+
+            FillTriangle(
+                Vector2.Transform(vertices[0], rotation) + ViewportCenter(),
+                Vector2.Transform(vertices[1], rotation) + ViewportCenter(),
+                Vector2.Transform(vertices[2], rotation) + ViewportCenter(),
+                new Color(0.1f, 0.8f, 0.1f, opacity)
+            );
         }
 
         _spriteBatch.End();
