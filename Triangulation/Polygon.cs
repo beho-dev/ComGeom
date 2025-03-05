@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -57,6 +58,20 @@ public class Polygon
         } while (current != this.Head);
     }
 
+    public List<Vector2> Vertices()
+    {
+        var vertices = new List<Vector2>();
+        this.EachVertex((vertex) => vertices.Add(vertex.Position));
+        return vertices;
+    }
+
+    public List<Tuple<Vector2, Vector2>> Edges()
+    {
+        var edges = new List<Tuple<Vector2, Vector2>>();
+        this.EachVertex((vertex) => edges.Add(new(vertex.Position, vertex.Next.Position)));
+        return edges;
+    }
+
     /// <summary>
     /// Calculates the area of the polygon using the shoelace formula.
     ///
@@ -87,5 +102,18 @@ public class Polygon
         );
 
         return area;
+    }
+
+    internal Polygon Clone()
+    {
+        VertexStructure current = this.Head;
+        Polygon clone = new(this.Head.Position);
+        do
+        {
+            clone.Add(current.Position);
+            current = current.Next;
+        } while (current != this.Head);
+
+        return clone;
     }
 }

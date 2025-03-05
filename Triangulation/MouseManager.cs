@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Triangulation;
@@ -25,5 +26,10 @@ public class MouseManager
         }
 
         _previousState = currentState;
+    }
+
+    public Vector2 Position()
+    {
+        return new Vector2(_previousState.X, _previousState.Y);
     }
 }

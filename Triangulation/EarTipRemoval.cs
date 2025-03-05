@@ -11,8 +11,6 @@ namespace Triangulation;
 ///
 /// An ear is a vertex that is part of a triangle with two edges that are
 /// diagonals of the polygon.
-///
-/// N.B. this algorithm will overwrite the polygon's vertex list.
 /// </summary>
 public class EarTipRemoval
 {
@@ -21,8 +19,10 @@ public class EarTipRemoval
     /// </summary>
     /// <param name="polygon">The polygon to triangulate.</param>
     /// <returns>A list of triangles.</returns>
-    public static List<System.Tuple<Vector2, Vector2, Vector2>> Triangulate(Polygon polygon)
+    public static List<System.Tuple<Vector2, Vector2, Vector2>> Triangulate(Polygon input)
     {
+        Polygon polygon = input.Clone();
+
         // a set of vertices that have been identified as ears
         HashSet<VertexStructure> ears = [];
 
@@ -83,7 +83,8 @@ public class EarTipRemoval
                 n--;
 
                 // the polygon might have had its head removed
-                if (v == polygon.Head) {
+                if (v == polygon.Head)
+                {
                     polygon.Head = v.Next;
                 }
 
@@ -92,7 +93,9 @@ public class EarTipRemoval
             } while (v != polygon.Head);
         }
 
-        removed.Add(new(polygon.Head.Position, polygon.Head.Next.Position, polygon.Head.Next.Next.Position));
+        removed.Add(
+            new(polygon.Head.Position, polygon.Head.Next.Position, polygon.Head.Next.Next.Position)
+        );
 
         return removed;
     }
