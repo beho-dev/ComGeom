@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -124,8 +123,18 @@ public class TriangulationGame : Game
         _highlight.Update(gameTime);
 
         var mousePosition = _mouseManager.Position();
-        _highlight.Position = _polygon.Vertices().MinBy(v => (v - mousePosition).Length());
+        var closest = Shapes.FindClosestVertexWithin(_polygon.Vertices(), mousePosition, 10);
 
+        if (!closest.HasValue)
+        {
+            _highlight.IsActive = false;
+            Mouse.SetCursor(MouseCursor.Arrow); // Default cursor
+            return;
+        }
+
+        _highlight.IsActive = true;
+        _highlight.Position = closest.Value;
+        Mouse.SetCursor(MouseCursor.Hand); // Hand cursor when over a vertex
         base.Update(gameTime);
     }
 

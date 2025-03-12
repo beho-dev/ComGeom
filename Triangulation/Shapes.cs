@@ -141,4 +141,30 @@ public class Shapes
     {
         return Shapes.IsLeftOrOn(a, b, c);
     }
+
+    public static Vector2? FindClosestVertexWithin(
+        List<Vector2> vertices,
+        Vector2 position,
+        float maxDistance
+    )
+    {
+        if (vertices.Count == 0)
+        {
+            return null;
+        }
+
+        Vector2 closest = vertices[0];
+        float closestDistance = (closest - position).Length();
+        vertices.ForEach(vertex =>
+        {
+            var distance = (vertex - position).Length();
+            if (distance < closestDistance)
+            {
+                closest = vertex;
+                closestDistance = distance;
+            }
+        });
+
+        return (closestDistance <= maxDistance ? closest : null);
+    }
 }
