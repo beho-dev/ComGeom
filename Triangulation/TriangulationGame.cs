@@ -94,21 +94,33 @@ public class TriangulationGame : Game
         _keyboardManager.On(Keys.Space, () => _showDiagonals = !_showDiagonals);
 
         var center = ViewportCenter();
+        // _polygon = Polygon.FromList(
+        //     [
+        //         center + new Vector2(-100, -100),
+        //         center + new Vector2(100, -100),
+        //         center + new Vector2(175, 0),
+        //         center + new Vector2(150, 180),
+        //         center + new Vector2(75, 65),
+        //         center + new Vector2(-135, 145),
+        //         center + new Vector2(-50, 30),
+        //         center + new Vector2(-150, -85),
+        //         center + new Vector2(-220, -120),
+        //     ]
+        // );
+
         _polygon = Polygon.FromList(
             [
+
                 center + new Vector2(-100, -100),
+                center + new Vector2(0, 0),
                 center + new Vector2(100, -100),
-                center + new Vector2(175, 0),
-                center + new Vector2(150, 180),
-                center + new Vector2(75, 65),
-                center + new Vector2(-135, 145),
-                center + new Vector2(-50, 30),
-                center + new Vector2(-150, -85),
-                center + new Vector2(-220, -120),
+                center + new Vector2(100, 100),
+                center + new Vector2(-100, 100),
             ]
         );
 
-        _triangulation = EarTipRemoval.Triangulate(_polygon);
+        _triangulation = MonotonePartition.Triangulate(_polygon);
+        // _triangulation = EarTipRemoval.Triangulate(_polygon);
     }
 
     protected override void LoadContent()
@@ -123,7 +135,7 @@ public class TriangulationGame : Game
         _highlight.Update(gameTime);
 
         var mousePosition = _mouseManager.Position();
-        var closest = Shapes.FindClosestVertexWithin(_polygon.Vertices(), mousePosition, 10);
+        var closest = Shapes.FindClosestVertexWithin(_polygon.Points(), mousePosition, 10);
 
         if (!closest.HasValue)
         {

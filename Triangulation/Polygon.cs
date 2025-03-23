@@ -58,7 +58,7 @@ public class Polygon
         } while (current != this.Head);
     }
 
-    public List<Vector2> Vertices()
+    public List<Vector2> Points()
     {
         var vertices = new List<Vector2>();
         this.EachVertex((vertex) => vertices.Add(vertex.Position));
