@@ -93,11 +93,11 @@ public class Polygon
                     return;
                 }
 
-                area += Shapes.TriangleArea2(
+                area += new Triangle(
                     this.Head.Position,
                     vertex.Position,
                     vertex.Next.Position
-                );
+                ).Area2();
             }
         );
 

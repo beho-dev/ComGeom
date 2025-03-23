@@ -4,32 +4,6 @@ namespace Triangulation.Tests;
 
 public class ShapesTests
 {
-    public class TriangleTests
-    {
-        [Fact]
-        public void EquilateralTriangle_CreatesCorrectVertices()
-        {
-            // Arrange
-            Vector2 center = new(0, 0);
-            float sideLength = 2f;
-            float expectedHeight = sideLength * MathF.Sqrt(3) / 2f;
-
-            // Act
-            var vertices = Shapes.EquilateralTriangle(center, sideLength);
-
-            // Assert
-            Assert.Equal(3, vertices.Count);
-            Assert.Equal(new Vector2(0, -expectedHeight * 2 / 3f), vertices[0]);
-            Assert.Equal(new Vector2(sideLength / 2f, expectedHeight / 3f), vertices[1]);
-            Assert.Equal(new Vector2(-sideLength / 2f, expectedHeight / 3f), vertices[2]);
-
-            Assert.Equal(
-                Shapes.TriangleArea2(vertices[0], vertices[1], vertices[2]),
-                sideLength * sideLength * MathF.Sqrt(3) / 2f
-            );
-        }
-    }
-
     public class LeftSideTests
     {
         [Fact]

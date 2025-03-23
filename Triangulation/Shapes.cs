@@ -1,39 +1,13 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Triangulation;
 
 public class Shapes
 {
-    public static List<Vector2> EquilateralTriangle(Vector2 center, float sideLength)
-    {
-        float height = sideLength * System.MathF.Sqrt(3) / 2f;
-        return
-        [
-            center + new Vector2(0, -height * 2 / 3f),
-            center + new Vector2(sideLength / 2f, height / 3f),
-            center + new Vector2(-sideLength / 2f, height / 3f),
-        ];
-    }
-
-    /// <summary>
-    /// Calculates twice the area of a triangle.
-    ///
-    /// This is done to avoid floating point precision issues.
-    ///
-    /// N.B. this is more a principal of the textbook I am
-    /// following, the monogame framework works in floating point,
-    /// precision, we may want to limit our game logic to integer
-    /// coordinates for fun later.
-    /// </summary>
-    /// <param name="a">the first vertex of the triangle</param>
-    /// <param name="b">the second vertex of the triangle</param>
-    /// <param name="c">the third vertex of the triangle</param>
-    /// <returns>twice the area of the triangle</returns>
+    // TODO move references to triangle class
     public static float TriangleArea2(Vector2 a, Vector2 b, Vector2 c)
     {
-        return ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X));
+        return new Triangle(a, b, c).Area2();
     }
 
     /// <summary>

@@ -29,7 +29,7 @@ public class PolygonTests
         {
             // Arrange
             float sideLength = 2f;
-            var triangle = Polygon.EquilateralTriangle(Vector2.Zero, sideLength);
+            var triangle = Triangle.Equilateral(Vector2.Zero, sideLength);
             float expectedArea = 2 * sideLength * sideLength * MathF.Sqrt(3) / 4f;
 
             // Act

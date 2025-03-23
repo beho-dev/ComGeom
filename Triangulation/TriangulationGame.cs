@@ -3,69 +3,17 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Triangulation.UI;
 
 namespace Triangulation;
 
-public class DrawTriangleCommand(VertexPositionColor[] Vertices)
-{
-    public VertexPositionColor[] Vertices = Vertices;
-
-    public static DrawTriangleCommand FromVertices(List<Vector2> vertices, Color color)
-    {
-        return new DrawTriangleCommand(
-            [
-                new VertexPositionColor(new Vector3(vertices[0], 0), color),
-                new VertexPositionColor(new Vector3(vertices[1], 0), color),
-                new VertexPositionColor(new Vector3(vertices[2], 0), color),
-            ]
-        );
-    }
-}
-
-internal class Highlight
-{
-    public bool IsActive = false;
-    public Vector2 Position = Vector2.Zero;
-    public double Rotation = 0;
-
-    public void Update(GameTime gameTime)
-    {
-        Rotation = gameTime.TotalGameTime.TotalSeconds * 2;
-    }
-
-    internal void Draw(GameTime gameTime, Camera camera, GraphicsDevice graphicsDevice)
-    {
-        if (!IsActive)
-        {
-            return;
-        }
-        // Draw a semi-transparent green equilateral triangle
-        var vertices = Shapes.EquilateralTriangle(Vector2.Zero, 20);
-
-        var cycle = (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10);
-        var opacity = cycle * 0.5f + 0.5f;
-        var rotation = Matrix.CreateRotationZ((float)Rotation);
-
-        TriangulationGame.DrawTriangle(
-            DrawTriangleCommand.FromVertices(
-                [
-                    Vector2.Transform(vertices[0], rotation) + Position,
-                    Vector2.Transform(vertices[1], rotation) + Position,
-                    Vector2.Transform(vertices[2], rotation) + Position,
-                ],
-                new Color(0.1f, 0.8f, 0.1f, opacity)
-            ),
-            camera,
-            graphicsDevice
-        );
-    }
-}
-
 public class TriangulationGame : Game
 {
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Camera _camera;
+    private DrawContext _drawContext;
+
     private MouseManager _mouseManager;
     private KeyboardManager _keyboardManager;
     private bool _showDiagonals = false;
@@ -76,6 +24,7 @@ public class TriangulationGame : Game
     public TriangulationGame()
     {
         _graphics = new GraphicsDeviceManager(this);
+
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -85,15 +34,16 @@ public class TriangulationGame : Game
         base.Initialize();
 
         _camera = new Camera();
+        _drawContext = new DrawContext(_camera, _graphics.GraphicsDevice);
 
         _mouseManager = new MouseManager();
         _mouseManager.OnScroll += (delta) => _camera.Zoom += delta * 0.001f;
 
         _keyboardManager = new KeyboardManager();
-        _keyboardManager.On(Keys.Escape, () => Exit());
+        _keyboardManager.On(Keys.Escape, Exit);
         _keyboardManager.On(Keys.Space, () => _showDiagonals = !_showDiagonals);
 
-        var center = ViewportCenter();
+        var center = _drawContext.ViewportCenter();
         // _polygon = Polygon.FromList(
         //     [
         //         center + new Vector2(-100, -100),
@@ -107,10 +57,8 @@ public class TriangulationGame : Game
         //         center + new Vector2(-220, -120),
         //     ]
         // );
-
         _polygon = Polygon.FromList(
             [
-
                 center + new Vector2(-100, -100),
                 center + new Vector2(0, 0),
                 center + new Vector2(100, -100),
@@ -171,7 +119,7 @@ public class TriangulationGame : Game
             RenderTriangulation();
         }
 
-        _highlight.Draw(gameTime, _camera, GraphicsDevice);
+        _highlight.Draw(gameTime, _drawContext);
 
         _spriteBatch.End();
 
@@ -184,7 +132,10 @@ public class TriangulationGame : Game
         {
             var triangle = _triangulation[i];
             Color color = InterpolateColors(i, _triangulation.Count);
-            FillTriangle(triangle.Item1, triangle.Item2, triangle.Item3, color);
+            _drawContext.FillTriangle(
+                new Triangle(triangle.Item1, triangle.Item2, triangle.Item3),
+                color
+            );
         }
     }
 
@@ -224,65 +175,6 @@ public class TriangulationGame : Game
         return color;
     }
 
-    // draw a filled triangle using the _spriteBatch
-
-    private void FillTriangle(Vector2 a, Vector2 b, Vector2 c, Color color)
-    {
-        // Create vertices for the triangle
-        VertexPositionColor[] vertices = new VertexPositionColor[3];
-        vertices[0] = new VertexPositionColor(new Vector3(a, 0), color);
-        vertices[1] = new VertexPositionColor(new Vector3(b, 0), color);
-        vertices[2] = new VertexPositionColor(new Vector3(c, 0), color);
-
-        DrawTriangle(new DrawTriangleCommand(vertices), _camera, GraphicsDevice);
-    }
-
-    public static void DrawTriangle(
-        DrawTriangleCommand command,
-        Camera camera,
-        GraphicsDevice graphicsDevice
-    )
-    {
-        // Create or reuse the basic effect
-        BasicEffect effect = new(graphicsDevice) { VertexColorEnabled = true };
-
-        // Apply zoom to the projection matrix
-        Vector2 center = ViewportCenter(graphicsDevice);
-        Matrix zoom = Matrix.CreateScale(camera.Zoom);
-        Matrix translation =
-            Matrix.CreateTranslation(new Vector3(-center, 0))
-            * zoom
-            * Matrix.CreateTranslation(new Vector3(center, 0));
-
-        effect.Projection =
-            translation
-            * Matrix.CreateOrthographicOffCenter(
-                0,
-                graphicsDevice.Viewport.Width,
-                graphicsDevice.Viewport.Height,
-                0,
-                0,
-                1
-            );
-
-        // Draw the triangle
-        foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-        {
-            pass.Apply();
-            graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, command.Vertices, 0, 1);
-        }
-    }
-
-    private Vector2 ViewportCenter()
-    {
-        return ViewportCenter(GraphicsDevice);
-    }
-
-    public static Vector2 ViewportCenter(GraphicsDevice graphicsDevice)
-    {
-        return new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2);
-    }
-
     private void DrawEdge(Texture2D lineTexture, Tuple<Vector2, Vector2> edge, Color color)
     {
         DrawEdge(lineTexture, edge.Item1, edge.Item2, color);
@@ -291,14 +183,12 @@ public class TriangulationGame : Game
     private void DrawEdge(Texture2D lineTexture, Vector2 a, Vector2 b, Color color)
     {
         Vector2 edge = b - a;
-        float length = edge.Length();
         float angle = MathF.Atan2(edge.Y, edge.X);
 
-        Vector2 center = ViewportCenter();
+        Vector2 center = _drawContext.ViewportCenter();
         Vector2 zoomedA = center + (a - center) * _camera.Zoom;
         Vector2 zoomedB = center + (b - center) * _camera.Zoom;
         edge = zoomedB - zoomedA;
-        length = edge.Length();
 
         _spriteBatch.Draw(
             lineTexture,
@@ -307,7 +197,7 @@ public class TriangulationGame : Game
             color,
             angle,
             Vector2.Zero,
-            new Vector2(length, 1),
+            new Vector2(edge.Length(), 1),
             SpriteEffects.None,
             0
         );
