@@ -1,0 +1,37 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Triangulation: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Triangulation/bin/Debug/net8.0/Triangulation.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Triangulation",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Triangulation: Watch",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "watch",
+            "program": "${workspaceFolder}/Triangulation/bin/Debug/net8.0/Triangulation.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Triangulation",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "justMyCode": true
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ]
+}
