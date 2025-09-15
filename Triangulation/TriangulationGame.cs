@@ -59,11 +59,16 @@ public class TriangulationGame : Game
         // );
         _polygon = Polygon.FromList(
             [
+                // bottom left
                 center + new Vector2(-100, -100),
+                //centre
                 center + new Vector2(0, 0),
+                // bottom right
                 center + new Vector2(100, -100),
+                // top right
                 center + new Vector2(100, 100),
-                center + new Vector2(-100, 100),
+                // top left
+                center + new Vector2(-100, 120),
             ]
         );
 

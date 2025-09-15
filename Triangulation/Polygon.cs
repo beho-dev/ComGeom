@@ -17,9 +17,9 @@ public class Polygon
 
     public Polygon(Vector2 position)
     {
-        this.Head = new VertexStructure { Position = position };
-        this.Head.Next = this.Head;
-        this.Head.Previous = this.Head;
+        Head = new VertexStructure { Position = position };
+        Head.Next = Head;
+        Head.Previous = Head;
     }
 
     public void Add(Vector2 position)
@@ -27,11 +27,11 @@ public class Polygon
         var newVertex = new VertexStructure
         {
             Position = position,
-            Next = this.Head,
-            Previous = this.Head.Previous,
+            Next = Head,
+            Previous = Head.Previous,
         };
 
-        this.Head.Previous = newVertex;
+        Head.Previous = newVertex;
         newVertex.Previous.Next = newVertex;
     }
 
@@ -47,28 +47,35 @@ public class Polygon
         return polygon;
     }
 
-    public void EachVertex(System.Action<VertexStructure> action)
+    public void EachVertex(Action<VertexStructure> action)
     {
-        VertexStructure current = this.Head;
+        VertexStructure current = Head;
 
         do
         {
             action(current);
             current = current.Next;
-        } while (current != this.Head);
+        } while (current != Head);
+    }
+
+    public List<VertexStructure> Vertices()
+    {
+        var vertices = new List<VertexStructure>();
+        EachVertex(vertices.Add);
+        return vertices;
     }
 
     public List<Vector2> Points()
     {
         var vertices = new List<Vector2>();
-        this.EachVertex((vertex) => vertices.Add(vertex.Position));
+        EachVertex((vertex) => vertices.Add(vertex.Position));
         return vertices;
     }
 
     public List<Tuple<Vector2, Vector2>> Edges()
     {
         var edges = new List<Tuple<Vector2, Vector2>>();
-        this.EachVertex((vertex) => edges.Add(new(vertex.Position, vertex.Next.Position)));
+        EachVertex((vertex) => edges.Add(new(vertex.Position, vertex.Next.Position)));
         return edges;
     }
 
@@ -84,20 +91,16 @@ public class Polygon
     public float Area2()
     {
         float area = 0;
-        this.EachVertex(
+        EachVertex(
             (vertex) =>
             {
-                if (vertex == this.Head || vertex.Next == this.Head)
+                if (vertex == Head || vertex.Next == Head)
                 {
                     // skip the first and last vertex to avoid double counting
                     return;
                 }
 
-                area += new Triangle(
-                    this.Head.Position,
-                    vertex.Position,
-                    vertex.Next.Position
-                ).Area2();
+                area += new Triangle(Head.Position, vertex.Position, vertex.Next.Position).Area2();
             }
         );
 
@@ -106,13 +109,13 @@ public class Polygon
 
     internal Polygon Clone()
     {
-        VertexStructure current = this.Head;
-        Polygon clone = new(this.Head.Position);
+        VertexStructure current = Head;
+        Polygon clone = new(Head.Position);
         do
         {
             clone.Add(current.Position);
             current = current.Next;
-        } while (current != this.Head);
+        } while (current != Head);
 
         return clone;
     }

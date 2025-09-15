@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Triangulation;
@@ -105,15 +107,15 @@ public class Shapes
     {
         if (AngleIsConvex(a, b, c))
         {
-            return Shapes.IsLeft(b, x, a) && Shapes.IsLeft(x, b, c);
+            return IsLeft(b, x, a) && IsLeft(x, b, c);
         }
 
-        return !(Shapes.IsLeftOrOn(b, x, c) && Shapes.IsLeftOrOn(x, b, a));
+        return !(IsLeftOrOn(b, x, c) && IsLeftOrOn(x, b, a));
     }
 
     public static bool AngleIsConvex(Vector2 a, Vector2 b, Vector2 c)
     {
-        return Shapes.IsLeftOrOn(a, b, c);
+        return IsLeftOrOn(a, b, c);
     }
 
     public static Vector2? FindClosestVertexWithin(
@@ -139,6 +141,16 @@ public class Shapes
             }
         });
 
-        return (closestDistance <= maxDistance ? closest : null);
+        return closestDistance <= maxDistance ? closest : null;
+    }
+
+    public static string DescribeEdge(Edge<VertexStructure>? edge)
+    {
+        if (edge == null)
+        {
+            return "null";
+        }
+
+        return $"{edge.From.Position} -> {edge.To.Position}";
     }
 }
