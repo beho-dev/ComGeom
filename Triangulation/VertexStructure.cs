@@ -15,4 +15,9 @@ public class VertexStructure
     public Vector2 Position;
     public VertexStructure Next;
     public VertexStructure Previous;
+
+    public override string ToString()
+    {
+        return $"Vertex({Position})";
+    }
 }

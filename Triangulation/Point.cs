@@ -6,4 +6,9 @@ public class Point(int X, int Y)
 {
     public int X { get; private set; } = X;
     public int Y { get; private set; } = Y;
+
+    public override string ToString()
+    {
+        return $"Point({X},{Y})";
+    }
 }

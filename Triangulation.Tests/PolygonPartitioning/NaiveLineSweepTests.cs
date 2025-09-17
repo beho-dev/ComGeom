@@ -12,11 +12,12 @@ public class NaiveLineSweepTests
         NaiveLineSweep sweep = new();
 
         // Act
-        sweep.Sweep(100);
+        sweep.Sweep(TestShapes.SimpleTriangleVertexA.Position.Y);
         sweep.AddEdges(TestShapes.SimpleTriangleVertexA);
-        var edges = sweep.Edges();
 
         // Assert
+        var edges = sweep.Edges();
+        Assert.Equal(2, edges.Count);
         Assert.Equal(
             new(TestShapes.SimpleTriangleVertexA, TestShapes.SimpleTriangleVertexB),
             edges[0]

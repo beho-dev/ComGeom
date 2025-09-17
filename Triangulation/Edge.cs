@@ -37,4 +37,9 @@ public class Edge<T>(T from, T to)
     {
         return System.HashCode.Combine(From, To);
     }
+
+    public override string ToString()
+    {
+        return $"Edge({From}->{To})";
+    }
 }
