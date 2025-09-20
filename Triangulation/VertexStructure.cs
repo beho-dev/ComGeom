@@ -12,7 +12,7 @@ namespace Triangulation;
 /// </summary>
 public class VertexStructure
 {
-    public Vector2 Position;
+    public Point Position;
     public VertexStructure Next;
     public VertexStructure Previous;
 

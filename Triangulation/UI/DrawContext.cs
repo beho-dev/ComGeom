@@ -7,7 +7,12 @@ public class DrawContext(Camera Camera, GraphicsDevice GraphicsDevice)
 {
     public void FillTriangle(Triangle triangle, Color color)
     {
-        DrawTriangles(triangle.MapTo(p => new VertexPositionColor(new Vector3(p, 0), color)));
+        DrawTriangles(
+            triangle.MapTo(p => new VertexPositionColor(
+                new Vector3(MonoGameUtil.Vector2FromPoint(p), 0),
+                color
+            ))
+        );
     }
 
     public Vector2 ViewportCenter()

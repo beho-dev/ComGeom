@@ -15,14 +15,14 @@ public class Polygon
 {
     public VertexStructure Head;
 
-    public Polygon(Vector2 position)
+    public Polygon(Point position)
     {
         Head = new VertexStructure { Position = position };
         Head.Next = Head;
         Head.Previous = Head;
     }
 
-    public void Add(Vector2 position)
+    public void Add(Point position)
     {
         var newVertex = new VertexStructure
         {
@@ -35,7 +35,7 @@ public class Polygon
         newVertex.Previous.Next = newVertex;
     }
 
-    public static Polygon FromList(List<Vector2> points)
+    public static Polygon FromList(List<Point> points)
     {
         var polygon = new Polygon(points[0]);
 
@@ -65,16 +65,16 @@ public class Polygon
         return vertices;
     }
 
-    public List<Vector2> Points()
+    public List<Point> Points()
     {
-        var vertices = new List<Vector2>();
+        var vertices = new List<Point>();
         EachVertex((vertex) => vertices.Add(vertex.Position));
         return vertices;
     }
 
-    public List<Tuple<Vector2, Vector2>> Edges()
+    public List<Edge<Point>> Edges()
     {
-        var edges = new List<Tuple<Vector2, Vector2>>();
+        var edges = new List<Edge<Point>>();
         EachVertex((vertex) => edges.Add(new(vertex.Position, vertex.Next.Position)));
         return edges;
     }

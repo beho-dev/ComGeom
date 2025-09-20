@@ -3,31 +3,25 @@ using Microsoft.Xna.Framework;
 
 namespace Triangulation;
 
-public record Triangle(Vector2 A, Vector2 B, Vector2 C)
+public record Triangle(Point A, Point B, Point C)
 {
-    public static Triangle Equilateral(Vector2 center, float sideLength)
+    public static Triangle Equilateral(Point center, int sideLength)
     {
-        float height = sideLength * MathF.Sqrt(3) / 2f;
+        int height = (int)Math.Floor(sideLength * MathF.Sqrt(3) / 2);
         return new Triangle(
-            center + new Vector2(0, -height * 2 / 3f),
-            center + new Vector2(sideLength / 2f, height / 3f),
-            center + new Vector2(-sideLength / 2f, height / 3f)
+            center + new Point(0, -height * 2 / 3),
+            center + new Point(sideLength / 2, height / 3),
+            center + new Point(-sideLength / 2, height / 3)
         );
     }
 
-    public Triangle Transform(Func<Vector2, Vector2> transform) =>
+    public Triangle Transform(Func<Point, Point> transform) =>
         new(transform(A), transform(B), transform(C));
 
-    public (T, T, T) TransformTo<T>(Func<Vector2, T> transform) =>
+    public (T, T, T) TransformTo<T>(Func<Point, T> transform) =>
         (transform(A), transform(B), transform(C));
 
-    public T[] MapTo<T>(Func<Vector2, T> transform) => [transform(A), transform(B), transform(C)];
-
-    public Triangle Rotate(float rotation, Vector2 position)
-    {
-        var rotationMatrix = Matrix.CreateRotationZ(rotation);
-        return Transform(p => Vector2.Transform(p, rotationMatrix) + position);
-    }
+    public T[] MapTo<T>(Func<Point, T> transform) => [transform(A), transform(B), transform(C)];
 
     /// <summary>
     /// Calculates twice the area of a triangle.
@@ -43,7 +37,7 @@ public record Triangle(Vector2 A, Vector2 B, Vector2 C)
     /// <param name="b">the second vertex of the triangle</param>
     /// <param name="c">the third vertex of the triangle</param>
     /// <returns>twice the area of the triangle</returns>
-    public float Area2()
+    public int Area2()
     {
         return (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X);
     }

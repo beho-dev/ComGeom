@@ -21,7 +21,7 @@ public class MonotonePartition
     /// </summary>
     /// <param name="polygon">The polygon to triangulate.</param>
     /// <returns>A list of triangles.</returns>
-    public static List<Tuple<Vector2, Vector2, Vector2>> Triangulate(Polygon polygon)
+    public static List<Tuple<Point, Point, Point>> Triangulate(Polygon polygon)
     {
         var diagonals = CalculateDiagonals(polygon);
         return [];

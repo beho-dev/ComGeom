@@ -19,7 +19,7 @@ public class EarTipRemoval
     /// </summary>
     /// <param name="polygon">The polygon to triangulate.</param>
     /// <returns>A list of triangles.</returns>
-    public static List<System.Tuple<Vector2, Vector2, Vector2>> Triangulate(Polygon input)
+    public static List<System.Tuple<Point, Point, Point>> Triangulate(Polygon input)
     {
         Polygon polygon = input.Clone();
 
@@ -27,7 +27,7 @@ public class EarTipRemoval
         HashSet<VertexStructure> ears = [];
 
         // keep track of the diagonals that have been removed
-        List<System.Tuple<Vector2, Vector2, Vector2>> removed = [];
+        List<System.Tuple<Point, Point, Point>> removed = [];
 
         // the number of vertices in the polygon
         int n = 0;

@@ -28,8 +28,8 @@ public class MouseManager
         _previousState = currentState;
     }
 
-    public Vector2 Position()
+    public Point Position()
     {
-        return new Vector2(_previousState.X, _previousState.Y);
+        return new(_previousState.X, _previousState.Y);
     }
 }

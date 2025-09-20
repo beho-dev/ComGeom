@@ -8,18 +8,19 @@ public class TriangleTests
     public void EquilateralTriangle_CreatesCorrectVertices()
     {
         // Arrange
-        Vector2 center = new(0, 0);
-        float sideLength = 2f;
-        float expectedHeight = sideLength * MathF.Sqrt(3) / 2f;
+        Point center = new(0, 0);
+        int sideLength = 20;
 
         // Act
         var triangle = Triangle.Equilateral(center, sideLength);
 
         // Assert
-        Assert.Equal(new Vector2(0, -expectedHeight * 2 / 3f), triangle.A);
-        Assert.Equal(new Vector2(sideLength / 2f, expectedHeight / 3f), triangle.B);
-        Assert.Equal(new Vector2(-sideLength / 2f, expectedHeight / 3f), triangle.C);
+        int expectedHeight = (int)Math.Floor(sideLength * MathF.Sqrt(3) / 2);
+        int expectedArea = 320;
+        Assert.Equal(new Point(0, -11), triangle.A);
+        Assert.Equal(new Point(10, 5), triangle.B);
+        Assert.Equal(new Point(-10, 5), triangle.C);
 
-        Assert.Equal(triangle.Area2(), sideLength * sideLength * MathF.Sqrt(3) / 2f);
+        Assert.Equal(expectedArea, triangle.Area2());
     }
 }

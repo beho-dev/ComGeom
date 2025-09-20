@@ -7,7 +7,7 @@ namespace Triangulation;
 public class Shapes
 {
     // TODO move references to triangle class
-    public static float TriangleArea2(Vector2 a, Vector2 b, Vector2 c)
+    public static float TriangleArea2(Point a, Point b, Point c)
     {
         return new Triangle(a, b, c).Area2();
     }
@@ -19,7 +19,7 @@ public class Shapes
     /// <param name="b">the end of the line segment</param>
     /// <param name="c">the point to check if it is on the left side of the line segment</param>
     /// <returns>true if c is on the left side of the line segment, false otherwise</returns>
-    public static bool IsLeft(Vector2 a, Vector2 b, Vector2 c)
+    public static bool IsLeft(Point a, Point b, Point c)
     {
         return TriangleArea2(a, b, c) > 0;
     }
@@ -31,12 +31,12 @@ public class Shapes
     /// <param name="b">the end of the line segment</param>
     /// <param name="c">the point to check if it is on the left side of the line segment</param>
     /// <returns>true if c is on the left side of the line segment, false otherwise</returns>
-    public static bool IsLeftOrOn(Vector2 a, Vector2 b, Vector2 c)
+    public static bool IsLeftOrOn(Point a, Point b, Point c)
     {
         return TriangleArea2(a, b, c) >= 0;
     }
 
-    public static bool Collinear(Vector2 a, Vector2 b, Vector2 c)
+    public static bool Collinear(Point a, Point b, Point c)
     {
         return TriangleArea2(a, b, c) == 0;
     }
@@ -48,7 +48,7 @@ public class Shapes
     /// <param name="b">the end of the line segment</param>
     /// <param name="c">the point to check if it is between a and b</param>
     /// <returns>true if c is between a and b, false otherwise</returns>
-    public static bool Between(Vector2 a, Vector2 b, Vector2 c)
+    public static bool Between(Point a, Point b, Point c)
     {
         if (!Collinear(a, b, c))
         {
@@ -73,7 +73,7 @@ public class Shapes
     /// <param name="c">the start of the second line segment</param>
     /// <param name="d">the end of the second line segment</param>
     /// <returns>true if the line segments intersect, false otherwise</returns>
-    public static bool Intersects(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+    public static bool Intersects(Point a, Point b, Point c, Point d)
     {
         if (IntersectsProperly(a, b, c, d))
         {
@@ -93,7 +93,7 @@ public class Shapes
     /// <param name="c">the start of the second line segment</param>
     /// <param name="d">the end of the second line segment</param>
     /// <returns>true if the line segments intersect, false otherwise</returns>
-    public static bool IntersectsProperly(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+    public static bool IntersectsProperly(Point a, Point b, Point c, Point d)
     {
         if (Collinear(a, b, c) || Collinear(a, b, d) || Collinear(c, d, a) || Collinear(c, d, b))
         {
@@ -103,7 +103,7 @@ public class Shapes
         return IsLeft(a, b, c) != IsLeft(a, b, d) && IsLeft(c, d, a) != IsLeft(c, d, b);
     }
 
-    public static bool InAngle(Vector2 a, Vector2 b, Vector2 c, Vector2 x)
+    public static bool InAngle(Point a, Point b, Point c, Point x)
     {
         if (AngleIsConvex(a, b, c))
         {
@@ -113,14 +113,19 @@ public class Shapes
         return !(IsLeftOrOn(b, x, c) && IsLeftOrOn(x, b, a));
     }
 
-    public static bool AngleIsConvex(Vector2 a, Vector2 b, Vector2 c)
+    public static bool AngleIsConvex(Point a, Point b, Point c)
     {
         return IsLeftOrOn(a, b, c);
     }
 
-    public static Vector2? FindClosestVertexWithin(
-        List<Vector2> vertices,
-        Vector2 position,
+    public static double VectorLength(Point p)
+    {
+        return Math.Sqrt(Math.Pow(p.X, 2) + Math.Pow(p.Y, 2));
+    }
+
+    public static Point? FindClosestVertexWithin(
+        List<Point> vertices,
+        Point position,
         float maxDistance
     )
     {
@@ -129,11 +134,11 @@ public class Shapes
             return null;
         }
 
-        Vector2 closest = vertices[0];
-        float closestDistance = (closest - position).Length();
+        Point closest = vertices[0];
+        double closestDistance = VectorLength(closest - position);
         vertices.ForEach(vertex =>
         {
-            var distance = (vertex - position).Length();
+            var distance = VectorLength(vertex - position);
             if (distance < closestDistance)
             {
                 closest = vertex;

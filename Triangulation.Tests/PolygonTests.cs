@@ -10,9 +10,9 @@ public class PolygonTests
         public void TriangleArea_CalculatesCorrectly()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(2, 0);
-            Vector2 c = new(1, 2);
+            Point a = new(0, 0);
+            Point b = new(2, 0);
+            Point c = new(1, 2);
 
             // Act
             float area = Shapes.TriangleArea2(a, b, c);
@@ -28,15 +28,15 @@ public class PolygonTests
         public void Area_EquilateralTriangle_CalculatesCorrectly()
         {
             // Arrange
-            float sideLength = 2f;
-            var triangle = Triangle.Equilateral(Vector2.Zero, sideLength);
-            float expectedArea = 2 * sideLength * sideLength * MathF.Sqrt(3) / 4f;
+            int sideLength = 22;
+            var triangle = Triangle.Equilateral(Point.Zero, sideLength);
+            int expectedArea = 396; // Math.floor(2 * sideLength * sideLength * MathF.Sqrt(3) / 4f)
 
             // Act
             float area = triangle.Area2();
 
             // Assert
-            Assert.Equal(expectedArea, area, precision: 4);
+            Assert.Equal(expectedArea, area);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ public class PolygonTests
         {
             // Arrange
             var square = Polygon.FromList(
-                [new Vector2(0, 0), new Vector2(2, 0), new Vector2(2, 2), new Vector2(0, 2)]
+                [new Point(0, 0), new Point(2, 0), new Point(2, 2), new Point(0, 2)]
             );
             float expectedArea = 2 * 4f; // 2x2 square
 
@@ -59,13 +59,11 @@ public class PolygonTests
         public void Area_Triangle_MatchesTriangleAreaMethod()
         {
             // Arrange
-            var triangle = Polygon.FromList(
-                [new Vector2(0, 0), new Vector2(2, 0), new Vector2(1, 2)]
-            );
+            var triangle = Polygon.FromList([new Point(0, 0), new Point(2, 0), new Point(1, 2)]);
             float expectedArea = Shapes.TriangleArea2(
-                new Vector2(0, 0),
-                new Vector2(2, 0),
-                new Vector2(1, 2)
+                new Point(0, 0),
+                new Point(2, 0),
+                new Point(1, 2)
             );
 
             // Act

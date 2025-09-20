@@ -18,7 +18,7 @@ public class TriangulationGame : Game
     private KeyboardManager _keyboardManager;
     private bool _showDiagonals = false;
     private Polygon _polygon;
-    private List<Tuple<Vector2, Vector2, Vector2>> _triangulation;
+    private List<Tuple<Point, Point, Point>> _triangulation;
     private readonly Highlight _highlight = new() { IsActive = true };
 
     public TriangulationGame()
@@ -44,31 +44,33 @@ public class TriangulationGame : Game
         _keyboardManager.On(Keys.Space, () => _showDiagonals = !_showDiagonals);
 
         var center = _drawContext.ViewportCenter();
+        // TODO replace this with something that is applied at draw time
+        var offset = new Point((int)center.X, (int)center.Y);
         // _polygon = Polygon.FromList(
         //     [
-        //         center + new Vector2(-100, -100),
-        //         center + new Vector2(100, -100),
-        //         center + new Vector2(175, 0),
-        //         center + new Vector2(150, 180),
-        //         center + new Vector2(75, 65),
-        //         center + new Vector2(-135, 145),
-        //         center + new Vector2(-50, 30),
-        //         center + new Vector2(-150, -85),
-        //         center + new Vector2(-220, -120),
+        //         center + new Point(-100, -100),
+        //         center + new Point(100, -100),
+        //         center + new Point(175, 0),
+        //         center + new Point(150, 180),
+        //         center + new Point(75, 65),
+        //         center + new Point(-135, 145),
+        //         center + new Point(-50, 30),
+        //         center + new Point(-150, -85),
+        //         center + new Point(-220, -120),
         //     ]
         // );
         _polygon = Polygon.FromList(
             [
                 // bottom left
-                center + new Vector2(-100, -100),
+                offset + new Point(-100, -100),
                 //centre
-                center + new Vector2(0, 0),
+                offset + new Point(0, 0),
                 // bottom right
-                center + new Vector2(100, -100),
+                offset + new Point(100, -100),
                 // top right
-                center + new Vector2(100, 100),
+                offset + new Point(100, 100),
                 // top left
-                center + new Vector2(-100, 120),
+                offset + new Point(-100, 120),
             ]
         );
 
@@ -88,7 +90,11 @@ public class TriangulationGame : Game
         _highlight.Update(gameTime);
 
         var mousePosition = _mouseManager.Position();
-        var closest = Shapes.FindClosestVertexWithin(_polygon.Points(), mousePosition, 10);
+        Nullable<Point> closest = Shapes.FindClosestVertexWithin(
+            _polygon.Points(),
+            mousePosition,
+            10
+        );
 
         if (!closest.HasValue)
         {
@@ -180,13 +186,15 @@ public class TriangulationGame : Game
         return color;
     }
 
-    private void DrawEdge(Texture2D lineTexture, Tuple<Vector2, Vector2> edge, Color color)
+    private void DrawEdge(Texture2D lineTexture, Edge<Point> edge, Color color)
     {
-        DrawEdge(lineTexture, edge.Item1, edge.Item2, color);
+        DrawEdge(lineTexture, edge.From, edge.To, color);
     }
 
-    private void DrawEdge(Texture2D lineTexture, Vector2 a, Vector2 b, Color color)
+    private void DrawEdge(Texture2D lineTexture, Point pointA, Point pointB, Color color)
     {
+        Vector2 a = MonoGameUtil.Vector2FromPoint(pointA);
+        Vector2 b = MonoGameUtil.Vector2FromPoint(pointB);
         Vector2 edge = b - a;
         float angle = MathF.Atan2(edge.Y, edge.X);
 

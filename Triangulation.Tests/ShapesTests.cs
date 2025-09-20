@@ -10,9 +10,9 @@ public class ShapesTests
         public void IsLeft_PointIsOnLeftSide_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(0, 1);
-            Vector2 c = new(-1, 0.5f);
+            Point a = new(0, 0);
+            Point b = new(0, 2);
+            Point c = new(-2, 1);
 
             // Act
             bool result = Shapes.IsLeft(a, b, c);
@@ -25,9 +25,9 @@ public class ShapesTests
         public void IsLeft_PointIsOnRightSide_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(0, 1);
-            Vector2 c = new(1, 0.5f);
+            Point a = new(0, 0);
+            Point b = new(0, 2);
+            Point c = new(2, 1);
 
             // Act
             bool result = Shapes.IsLeft(a, b, c);
@@ -40,9 +40,9 @@ public class ShapesTests
         public void IsLeft_PointIsOnLine_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(0, 1);
-            Vector2 c = new(0, 0.5f);
+            Point a = new(0, 0);
+            Point b = new(0, 2);
+            Point c = new(0, 1);
 
             // Act
             bool result = Shapes.IsLeft(a, b, c);
@@ -55,9 +55,9 @@ public class ShapesTests
         public void IsLeftOrOn_PointIsOnLeftSide_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(0, 1);
-            Vector2 c = new(-1, 0.5f);
+            Point a = new(0, 0);
+            Point b = new(0, 2);
+            Point c = new(-2, 1);
 
             // Act
             bool result = Shapes.IsLeftOrOn(a, b, c);
@@ -70,9 +70,9 @@ public class ShapesTests
         public void IsLeftOrOn_PointIsOnLine_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(0, 1);
-            Vector2 c = new(0, 0.5f);
+            Point a = new(0, 0);
+            Point b = new(0, 2);
+            Point c = new(0, 1);
 
             // Act
             bool result = Shapes.IsLeftOrOn(a, b, c);
@@ -88,9 +88,9 @@ public class ShapesTests
         public void Collinear_PointsAreCollinear_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(1, 1);
-            Vector2 c = new(2, 2);
+            Point a = new(0, 0);
+            Point b = new(1, 1);
+            Point c = new(2, 2);
 
             // Act
             bool result = Shapes.Collinear(a, b, c);
@@ -103,9 +103,9 @@ public class ShapesTests
         public void Collinear_PointsAreNotCollinear_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(1, 1);
-            Vector2 c = new(2, 3);
+            Point a = new(0, 0);
+            Point b = new(1, 1);
+            Point c = new(2, 3);
 
             // Act
             bool result = Shapes.Collinear(a, b, c);
@@ -123,19 +123,19 @@ public class ShapesTests
         [InlineData(0, 0, 0, 2, 0, -1, false)] // Point outside on vertical
         [InlineData(0, 0, 0, 2, 0, 3, false)] // Point outside on vertical
         public void Between_ChecksPointPosition(
-            float ax,
-            float ay,
-            float bx,
-            float by,
-            float cx,
-            float cy,
+            int ax,
+            int ay,
+            int bx,
+            int by,
+            int cx,
+            int cy,
             bool expected
         )
         {
             // Arrange
-            Vector2 a = new(ax, ay);
-            Vector2 b = new(bx, by);
-            Vector2 c = new(cx, cy);
+            Point a = new(ax, ay);
+            Point b = new(bx, by);
+            Point c = new(cx, cy);
 
             // Act
             bool result = Shapes.Between(a, b, c);
@@ -151,10 +151,10 @@ public class ShapesTests
         public void IntersectsProperly_LinesIntersect_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(2, 2);
-            Vector2 c = new(0, 2);
-            Vector2 d = new(2, 0);
+            Point a = new(0, 0);
+            Point b = new(2, 2);
+            Point c = new(0, 2);
+            Point d = new(2, 0);
 
             // Act
             bool result = Shapes.IntersectsProperly(a, b, c, d);
@@ -167,10 +167,10 @@ public class ShapesTests
         public void IntersectsProperly_LinesDoNotIntersect_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(1, 1);
-            Vector2 c = new(0, 2);
-            Vector2 d = new(1, 2);
+            Point a = new(0, 0);
+            Point b = new(1, 1);
+            Point c = new(0, 2);
+            Point d = new(1, 2);
 
             // Act
             bool result = Shapes.IntersectsProperly(a, b, c, d);
@@ -183,10 +183,10 @@ public class ShapesTests
         public void Intersects_LinesIntersect_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(2, 2);
-            Vector2 c = new(0, 2);
-            Vector2 d = new(2, 0);
+            Point a = new(0, 0);
+            Point b = new(2, 2);
+            Point c = new(0, 2);
+            Point d = new(2, 0);
 
             // Act
             bool result = Shapes.Intersects(a, b, c, d);
@@ -199,10 +199,10 @@ public class ShapesTests
         public void Intersects_LinesShareEndpoint_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(1, 1);
-            Vector2 c = new(1, 1);
-            Vector2 d = new(2, 0);
+            Point a = new(0, 0);
+            Point b = new(1, 1);
+            Point c = new(1, 1);
+            Point d = new(2, 0);
 
             // Act
             bool result = Shapes.Intersects(a, b, c, d);
@@ -215,10 +215,10 @@ public class ShapesTests
         public void Intersects_LinesDoNotIntersect_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(0, 0);
-            Vector2 b = new(1, 0);
-            Vector2 c = new(0, 2);
-            Vector2 d = new(1, 2);
+            Point a = new(0, 0);
+            Point b = new(1, 0);
+            Point c = new(0, 2);
+            Point d = new(1, 2);
 
             // Act
             bool result = Shapes.Intersects(a, b, c, d);
@@ -234,9 +234,9 @@ public class ShapesTests
         public void AngleIsConvex_ConvexAngle_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(0, 1);
-            Vector2 b = new(0, 0);
-            Vector2 c = new(1, 0); // This forms a 90-degree convex angle abc (counterclockwise from a to c)
+            Point a = new(0, 1);
+            Point b = new(0, 0);
+            Point c = new(1, 0); // This forms a 90-degree convex angle abc (counterclockwise from a to c)
 
             // Act
             bool result = Shapes.AngleIsConvex(a, b, c);
@@ -249,9 +249,9 @@ public class ShapesTests
         public void AngleIsConvex_ReflexAngle_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(1, 0);
-            Vector2 b = new(0, 0);
-            Vector2 c = new(0, 1); // This forms a 270-degree reflex angle abc (counterclockwise from a to c)
+            Point a = new(1, 0);
+            Point b = new(0, 0);
+            Point c = new(0, 1); // This forms a 270-degree reflex angle abc (counterclockwise from a to c)
 
             // Act
             bool result = Shapes.AngleIsConvex(a, b, c);
@@ -264,9 +264,9 @@ public class ShapesTests
         public void AngleIsConvex_StraightAngle_ReturnsTrue()
         {
             // Arrange
-            Vector2 a = new(-1, 0);
-            Vector2 b = new(0, 0);
-            Vector2 c = new(1, 0); // This forms a 180-degree straight angle abc
+            Point a = new(-1, 0);
+            Point b = new(0, 0);
+            Point c = new(1, 0); // This forms a 180-degree straight angle abc
 
             // Act
             bool result = Shapes.AngleIsConvex(a, b, c);
@@ -276,29 +276,29 @@ public class ShapesTests
         }
 
         [Theory]
-        [InlineData(0, 1, 0, 0, 1, 0, 0.5f, 0.5f, true)] // Point inside 90-degree convex angle
-        [InlineData(0, 1, 0, 0, 1, 0, -0.5f, -0.5f, false)] // Point outside 90-degree convex angle
-        [InlineData(0, 1, 0, 0, 1, 0, 0, 0, false)] // Point at vertex b
-        [InlineData(-1, 0, 0, 0, 1, 0, 0, 0.5f, true)] // Point inside 180-degree angle
-        [InlineData(1, 0, 0, 0, 0, 1, 0.5f, 0.5f, false)] // Point outside reflex angle
-        [InlineData(1, 0, 0, 0, 0, 1, -0.5f, -0.5f, true)] // Point inside reflex angle
+        [InlineData(0, 2, 0, 0, 2, 0, 1, 1, true)] // Point inside 90-degree convex angle
+        [InlineData(0, 2, 0, 0, 2, 0, -1, -1, false)] // Point outside 90-degree convex angle
+        [InlineData(0, 2, 0, 0, 2, 0, 0, 0, false)] // Point at vertex b
+        [InlineData(-2, 0, 0, 0, 2, 0, 0, 1, true)] // Point inside 180-degree angle
+        [InlineData(2, 0, 0, 0, 0, 2, 1, 1, false)] // Point outside reflex angle
+        [InlineData(2, 0, 0, 0, 0, 2, -1, -1, true)] // Point inside reflex angle
         public void InAngle_ChecksPointPosition(
-            float ax,
-            float ay,
-            float bx,
-            float by,
-            float cx,
-            float cy,
-            float px,
-            float py,
+            int ax,
+            int ay,
+            int bx,
+            int by,
+            int cx,
+            int cy,
+            int px,
+            int py,
             bool expected
         )
         {
             // Arrange
-            Vector2 a = new(ax, ay);
-            Vector2 b = new(bx, by);
-            Vector2 c = new(cx, cy);
-            Vector2 point = new(px, py);
+            Point a = new(ax, ay);
+            Point b = new(bx, by);
+            Point c = new(cx, cy);
+            Point point = new(px, py);
 
             // Act
             bool result = Shapes.InAngle(a, b, c, point);
@@ -311,10 +311,10 @@ public class ShapesTests
         public void InAngle_PointOnBoundary_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(0, 1);
-            Vector2 b = new(0, 0);
-            Vector2 c = new(1, 0); // Forms a convex 90-degree angle
-            Vector2 point = new(0, 0.5f); // Point on ray from b to a
+            Point a = new(0, 2);
+            Point b = new(0, 0);
+            Point c = new(2, 0); // Forms a convex 90-degree angle
+            Point point = new(0, 1); // Point on ray from b to a
 
             // Act
             bool result = Shapes.InAngle(a, b, c, point);
@@ -327,10 +327,10 @@ public class ShapesTests
         public void InAngle_PointAtVertex_ReturnsFalse()
         {
             // Arrange
-            Vector2 a = new(0, 1);
-            Vector2 b = new(0, 0);
-            Vector2 c = new(1, 0); // Forms a convex 90-degree angle
-            Vector2 point = b; // Point at vertex b
+            Point a = new(0, 1);
+            Point b = new(0, 0);
+            Point c = new(1, 0); // Forms a convex 90-degree angle
+            Point point = b; // Point at vertex b
 
             // Act
             bool result = Shapes.InAngle(a, b, c, point);

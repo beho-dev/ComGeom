@@ -6,7 +6,7 @@ namespace Triangulation.UI;
 public class Highlight : IUIElement
 {
     public bool IsActive = false;
-    public Vector2 Position = Vector2.Zero;
+    public Point Position = Point.Zero;
     public double Rotation = 0;
 
     public void Update(GameTime gameTime)
@@ -22,14 +22,11 @@ public class Highlight : IUIElement
             return;
 
         // Draw a semi-transparent green equilateral triangle
-        var triangle = Triangle.Equilateral(Vector2.Zero, 20);
+        var triangle = Triangle.Equilateral(Point.Zero, 20);
 
         var cycle = (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10);
         var opacity = cycle * 0.5f + 0.5f;
 
-        drawContext.FillTriangle(
-            triangle.Rotate((float)Rotation, Position),
-            new Color(0.1f, 0.8f, 0.1f, opacity)
-        );
+        drawContext.FillTriangle(triangle, new Color(0.1f, 0.8f, 0.1f, opacity));
     }
 }

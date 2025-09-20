@@ -9,7 +9,7 @@ public class DiagonalTests
     {
         // Arrange
         var polygon = Polygon.FromList(
-            [new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1)]
+            [new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(0, 1)]
         );
 
         // Act
@@ -24,13 +24,7 @@ public class DiagonalTests
     {
         // Arrange
         var polygon = Polygon.FromList(
-            [
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(1, 1),
-                new Vector2(0.5f, 0.25f),
-                new Vector2(0, 1),
-            ]
+            [new Point(0, 0), new Point(4, 0), new Point(4, 4), new Point(2, 1), new Point(0, 4)]
         );
 
         // Act
@@ -46,13 +40,13 @@ public class DiagonalTests
         // Arrange
         var polygon = Polygon.FromList(
             [
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(1.5f, 0.5f),
-                new Vector2(1, 1),
-                new Vector2(0.5f, 0.25f),
-                new Vector2(0, 1),
-                new Vector2(-0.5f, 0.5f),
+                new Point(0, 0),
+                new Point(4, 0),
+                new Point(6, 2),
+                new Point(4, 4),
+                new Point(2, 1),
+                new Point(0, 4),
+                new Point(-2, 2),
             ]
         );
 
@@ -68,7 +62,7 @@ public class DiagonalTests
     {
         // Arrange
         var polygon = Polygon.FromList(
-            [new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1)]
+            [new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(0, 1)]
         );
 
         // Act
