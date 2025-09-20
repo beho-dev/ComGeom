@@ -31,6 +31,14 @@ public class TestShapes
         [new(-100, 100), new(-100, -100), new(100, -100), new(100, 100), new(0, 0)]
     );
 
+    public static readonly VertexStructure BoxWithDownwardCuspVertexA =
+        BoxWithDownwardCusp.Vertices()[0];
+    public static readonly VertexStructure BoxWithDownwardCuspVertexB =
+        BoxWithDownwardCusp.Vertices()[1];
+    public static readonly VertexStructure BoxWithDownwardCuspVertexC =
+        BoxWithDownwardCusp.Vertices()[2];
+    public static readonly VertexStructure BoxWithDownwardCuspVertexD =
+        BoxWithDownwardCusp.Vertices()[3];
     public static readonly VertexStructure BoxWithDownwardCuspVertexE =
         BoxWithDownwardCusp.Vertices()[4];
 
@@ -45,7 +53,19 @@ public class TestShapes
         [new(-100, 100), new(-100, -100), new(0, 0), new(100, -100), new(100, 100)]
     );
 
+    public static readonly VertexStructure BoxWithUpwardCuspVertexA = BoxWithUpwardCusp.Vertices()[
+        0
+    ];
+    public static readonly VertexStructure BoxWithUpwardCuspVertexB = BoxWithUpwardCusp.Vertices()[
+        1
+    ];
     public static readonly VertexStructure BoxWithUpwardCuspVertexC = BoxWithUpwardCusp.Vertices()[
         2
+    ];
+    public static readonly VertexStructure BoxWithUpwardCuspVertexD = BoxWithUpwardCusp.Vertices()[
+        3
+    ];
+    public static readonly VertexStructure BoxWithUpwardCuspVertexE = BoxWithUpwardCusp.Vertices()[
+        4
     ];
 }

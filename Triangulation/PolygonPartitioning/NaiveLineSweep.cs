@@ -52,6 +52,9 @@ public class NaiveLineSweep : ILineSweep
 
     public VertexStructure? AddEdges(VertexStructure vertex)
     {
+        // sweep to the Y position of the vertex
+        Sweep(vertex.Position.Y);
+
         Console.WriteLine("Current edges:");
         foreach (var edge in _edges)
         {
@@ -69,18 +72,27 @@ public class NaiveLineSweep : ILineSweep
             return intersection < vertex.Position.X;
         });
 
-        if (i == -1)
+        if (i == _edges.Count - 1)
         {
-            i = _edges.Count;
+            // all edges are ot the left of the current point, insert to the right
+            _edges.AddRange([leftEdge, rightEdge]);
+
+            // for new edges the supporting vertex is the vertex itself
+            _supports.AddRange([vertex, vertex]);
+            return null;
         }
 
-        var support = i < _supports.Count ? _supports[i] : null;
+        if (i == -1)
+        {
+            // no edges are to the left of the current point, insert to the left
+            i = 0;
+        }
 
         _edges.InsertRange(i, [leftEdge, rightEdge]);
 
         // for new edges the supporting vertex is the vertex itself
+        var support = _supports[i];
         _supports.InsertRange(i, [vertex, vertex]);
-
         return support;
     }
 
